@@ -161,6 +161,7 @@ table available in CrateDB::
     cr> SELECT oid, typname, typarray, typelem, typlen, typtype, typcategory
     ... FROM pg_catalog.pg_type
     ... ORDER BY oid;
+
     +------+------------------------------+----------+---------+--------+---------+-------------+
     |  oid | typname                      | typarray | typelem | typlen | typtype | typcategory |
     +------+------------------------------+----------+---------+--------+---------+-------------+
