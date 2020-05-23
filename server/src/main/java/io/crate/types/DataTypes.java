@@ -110,7 +110,6 @@ public final class DataTypes {
         INTEGER,
         INTERVAL,
         LONG,
-        TIME,
         TIMESTAMPZ,
         TIMESTAMP
     );
