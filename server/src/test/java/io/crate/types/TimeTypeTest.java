@@ -34,18 +34,6 @@ public class TimeTypeTest {
     }
 
     @Test
-    public void test_format_time() {
-        assertThat(TimeType.formatTime(14400000), is("04:00:00"));
-        assertThat(TimeType.formatTime(14400123), is("04:00:00.123"));
-    }
-
-    @Test
-    public void test_translate_time() {
-        assertThat(TimeType.translateFrom(14400.123456789f), is(14400123));
-        assertThat(TimeType.formatTime(TimeType.translateFrom(14400.123456789f)), is("04:00:00.123"));
-    }
-
-    @Test
     public void test_value() {
         assertNull(TimeType.INSTANCE.value(null));
         assertThat(TimeType.INSTANCE.value("01:00:00Z"), is(3600000));

@@ -90,7 +90,7 @@ public class TypeConversionTest extends CrateUnitTest {
         for (Byte byteVal : bytes(10)) {
             for (int id : DataTypes.ALLOWED_CONVERSIONS.get(DataTypes.BYTE.id())) {
                 var t = DataTypes.fromId(id);
-                if (t.equals(DataTypes.IP)) {
+                if (t.equals(DataTypes.IP) || t.equals(DataTypes.TIMETZ)) {
                     byteVal = (byte) Math.abs(byteVal == Byte.MIN_VALUE ? byteVal >> 1 : byteVal);
                 }
                 t.implicitCast(byteVal);

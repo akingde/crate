@@ -64,7 +64,7 @@ public final class TimeType extends DataType<Integer> implements FixedWidthType,
 
     @Override
     public Precedence precedence() {
-        return Precedence.TIME;
+        return Precedence.TIMETZ;
     }
 
     @Override
