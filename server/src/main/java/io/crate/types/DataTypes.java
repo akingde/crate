@@ -111,7 +111,8 @@ public final class DataTypes {
         INTERVAL,
         LONG,
         TIMESTAMPZ,
-        TIMESTAMP
+        TIMESTAMP,
+        TIME
     );
 
     private static final Set<Integer> PRIMITIVE_TYPE_IDS =
