@@ -15,22 +15,22 @@ public class TimeTypeTest {
 
     @Test
     public void test_parse_time_should_always_ignore_time_zone() {
-        assertThat(TimeType.parseTime("01:00:00Z"), is(3600000));
-        assertThat(TimeType.parseTime("01:00:00+00"), is(3600000));
-        assertThat(TimeType.parseTime("04:00:00-03:00"), is(14400000));
-        assertThat(TimeType.parseTime("04:00:00+0300"), is(14400000));
-        assertThat(TimeType.parseTime("04:00:00+03:00"), is(14400000));
-        assertThat(TimeType.parseTime("04:00:00.123456789+03:00"), is(14400123));
-        assertThat(TimeType.parseTime("04:00:00+0000"), is(14400000));
-        assertThat(TimeType.parseTime("04:00:00.123456789-0000"), is(14400123));
+        assertThat(TimeTZParser.parse("01:00:00Z"), is(3600000));
+        assertThat(TimeTZParser.parse("01:00:00+00"), is(3600000));
+        assertThat(TimeTZParser.parse("04:00:00-03:00"), is(14400000));
+        assertThat(TimeTZParser.parse("04:00:00+0300"), is(14400000));
+        assertThat(TimeTZParser.parse("04:00:00+03:00"), is(14400000));
+        assertThat(TimeTZParser.parse("04:00:00.123456789+03:00"), is(14400123));
+        assertThat(TimeTZParser.parse("04:00:00+0000"), is(14400000));
+        assertThat(TimeTZParser.parse("04:00:00.123456789-0000"), is(14400123));
     }
 
     @Test
     public void test_parse_time_no_time_zone_explicitly_mentioned() {
-        assertThat(TimeType.parseTime("04:00:00"), is(14400000));
-        assertThat(TimeType.parseTime("14400000"), is(14400000));
-        assertThat(TimeType.parseTime("04:00:00.123456789"), is(14400123));
-        assertThat(TimeType.parseTime("14400123"), is(14400123));
+        assertThat(TimeTZParser.parse("04:00:00"), is(14400000));
+        assertThat(TimeTZParser.parse("14400000"), is(14400000));
+        assertThat(TimeTZParser.parse("04:00:00.123456789"), is(14400123));
+        assertThat(TimeTZParser.parse("14400123"), is(14400123));
     }
 
     @Test
