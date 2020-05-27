@@ -90,6 +90,10 @@ public final class TimeType extends DataType<Integer> implements FixedWidthType,
         }
     }
 
+    private static void checkIsSupportedLiteral(Object value) {
+
+    }
+
     @Override
     public int fixedSize() {
         return IntegerType.INTEGER_SIZE;
