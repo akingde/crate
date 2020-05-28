@@ -43,7 +43,6 @@ public final class TimeType extends DataType<Integer> implements FixedWidthType,
     public static final String NAME = "time without time zone";
     public static final TimeType INSTANCE = new TimeType(ID, NAME);
 
-
     private final int id;
     private final String name;
 

@@ -28,8 +28,9 @@ import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-import static io.crate.types.TimeType.parseTime;
-import static io.crate.types.TimeType.formatTime;
+import static io.crate.types.TimeZType.parseTime;
+import static io.crate.types.TimeZType.formatTime;
+import static io.crate.types.TimeZType.NAME;
 
 
 final class TimeType extends PGType<Integer> {
@@ -41,9 +42,8 @@ final class TimeType extends PGType<Integer> {
     private static final int TYPE_LEN = 4;
     private static final String TYPE_NAME = "time without time zone";
 
-
-    TimeType() {
-        super(OID, TYPE_LEN, TYPE_MOD, TYPE_NAME);
+    TimeZType() {
+        super(OID, TYPE_LEN, TYPE_MOD, NAME);
     }
 
     @Override

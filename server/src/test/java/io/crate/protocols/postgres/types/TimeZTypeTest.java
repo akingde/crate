@@ -27,14 +27,13 @@ import io.netty.buffer.Unpooled;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeParseException;
 
 import static org.hamcrest.Matchers.is;
 
 public class TimeTypeTest extends BasePGTypeTest<Integer> {
 
-    public TimeTypeTest() {
-        super(TimeType.INSTANCE);
+    public TimeZTypeTest() {
+        super(TimeZType.INSTANCE);
     }
 
     @Test
