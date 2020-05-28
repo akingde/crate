@@ -94,7 +94,7 @@ public class TypeConversionTest extends CrateUnitTest {
                 var t = DataTypes.fromId(id);
                 if (t.equals(DataTypes.IP)) {
                     byteVal = (byte) Math.abs(byteVal == Byte.MIN_VALUE ? byteVal >> 1 : byteVal);
-                } else if (t.equals(DataTypes.TIMEZ)) {
+                } else if (t.equals(DataTypes.TIMETZ)) {
                     byteVal = (byte) ThreadLocalRandom.current().nextInt(25);
                 }
                 t.implicitCast(byteVal);
