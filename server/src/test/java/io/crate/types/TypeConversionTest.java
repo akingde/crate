@@ -94,7 +94,7 @@ public class TypeConversionTest extends CrateUnitTest {
                 var t = DataTypes.fromId(id);
                 if (t.equals(DataTypes.IP)) {
                     byteVal = (byte) Math.abs(byteVal == Byte.MIN_VALUE ? byteVal >> 1 : byteVal);
-                } else if (t.equals(DataTypes.TIME)) {
+                } else if (t.equals(DataTypes.TIMEZ)) {
                     byteVal = (byte) ThreadLocalRandom.current().nextInt(25);
                 }
                 t.implicitCast(byteVal);
@@ -246,25 +246,25 @@ public class TypeConversionTest extends CrateUnitTest {
 
     @Test
     public void test_time_to_double_conversion() {
-        assertThat(TimeType.INSTANCE.isConvertableTo(DoubleType.INSTANCE, false),
+        assertThat(TimeZType.INSTANCE.isConvertableTo(DoubleType.INSTANCE, false),
                    is(false));
-        assertThat(DoubleType.INSTANCE.isConvertableTo(TimeType.INSTANCE, false),
+        assertThat(DoubleType.INSTANCE.isConvertableTo(TimeZType.INSTANCE, false),
                    is(false));
     }
 
     @Test
     public void test_time_to_long_conversion() {
-        assertThat(TimeType.INSTANCE.isConvertableTo(LongType.INSTANCE, false),
+        assertThat(TimeZType.INSTANCE.isConvertableTo(LongType.INSTANCE, false),
                    is(false));
-        assertThat(LongType.INSTANCE.isConvertableTo(TimeType.INSTANCE, false),
+        assertThat(LongType.INSTANCE.isConvertableTo(TimeZType.INSTANCE, false),
                    is(false));
     }
 
     @Test
     public void test_time_to_string_conversion() {
-        assertThat(TimeType.INSTANCE.isConvertableTo(StringType.INSTANCE, false),
+        assertThat(TimeZType.INSTANCE.isConvertableTo(StringType.INSTANCE, false),
                    is(false));
-        assertThat(StringType.INSTANCE.isConvertableTo(TimeType.INSTANCE, false),
+        assertThat(StringType.INSTANCE.isConvertableTo(TimeZType.INSTANCE, false),
                    is(true));
     }
 
