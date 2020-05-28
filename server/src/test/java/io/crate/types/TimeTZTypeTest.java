@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 
-
 public class TimeTZTypeTest extends CrateUnitTest {
 
     private org.hamcrest.Matcher<TimeTZ> isTZ(long value) {
