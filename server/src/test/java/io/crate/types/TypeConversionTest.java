@@ -88,7 +88,6 @@ public class TypeConversionTest extends CrateUnitTest {
 
     @Test
     public void numberConversionTest() throws Exception {
-
         for (Byte byteVal : bytes(10)) {
             for (int id : DataTypes.ALLOWED_CONVERSIONS.get(DataTypes.BYTE.id())) {
                 var t = DataTypes.fromId(id);
