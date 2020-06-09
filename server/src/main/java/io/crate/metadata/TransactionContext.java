@@ -56,7 +56,7 @@ public class TransactionContext {
 
 
     private final SessionSettings sessionSettings;
-    private long currentTimeMicros = -1;
+    private volatile long currentTimeMicros = -1;
 
     protected TransactionContext(SessionSettings sessionSettings) {
         this.sessionSettings = sessionSettings;
@@ -77,8 +77,9 @@ public class TransactionContext {
      * Correlated with currentTimeMillis().
      */
     public long currentTimeMicros() {
-        if (MILLIS_PROVIDER.get() != null) {
-            return MILLIS_PROVIDER.get().get() * 1000L;
+        Supplier<Long> mp = MILLIS_PROVIDER.get();
+        if (mp != null) {
+            return mp.get() * 1000L;
         }
         // no synchronization because StmtCtx is mostly used during single-threaded analysis phase
         if (currentTimeMicros == -1) {

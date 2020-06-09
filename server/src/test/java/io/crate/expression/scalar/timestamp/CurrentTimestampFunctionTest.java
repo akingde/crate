@@ -1,5 +1,6 @@
 package io.crate.expression.scalar.timestamp;
 
+import com.carrotsearch.randomizedtesting.annotations.Seed;
 import io.crate.expression.symbol.Literal;
 import io.crate.expression.scalar.AbstractScalarFunctionsTest;
 import io.crate.metadata.TransactionContext;
@@ -53,6 +54,11 @@ public class CurrentTimestampFunctionTest extends AbstractScalarFunctionsTest {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Precision must be between 0 and 3");
         assertEvaluate("current_timestamp(4)", null);
+    }
+
+    @Test
+    public void test_calls_within_statement_are_idempotent() {
+        assertEvaluate("current_timestamp(3) = current_timestamp(3)", true);
     }
 
     @Test

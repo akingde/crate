@@ -589,9 +589,9 @@ public class TransportSQLActionClassLifecycleTest extends SQLTransportIntegratio
     @Test
     public void selectWhereEqualCurrentTimestamp() throws Exception {
         SQLResponse response = execute("select * from sys.cluster where current_timestamp = current_timestamp");
-        assertThat(response.rowCount(), is(1L));
+        assertThat(response.rowCount(), is(0L));
 
-        SQLResponse newResponse = execute("select * from sys.cluster where current_timestamp > current_timestamp");
-        assertThat(newResponse.rowCount(), is(0L));
+        SQLResponse newResponse = execute("select * from sys.cluster where current_timestamp < current_timestamp");
+        assertThat(newResponse.rowCount(), is(1L));
     }
 }

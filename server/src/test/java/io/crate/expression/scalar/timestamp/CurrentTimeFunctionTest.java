@@ -54,9 +54,8 @@ public class CurrentTimeFunctionTest extends AbstractScalarFunctionsTest {
     }
 
     @Test
-    public void time_is_created_correctly_2() {
-        TimeTZ expected = new TimeTZ(txnCtx.currentTimeMicros(), 0);
-        assertEvaluate("current_time(3)", expected);
+    public void test_calls_within_statement_are_idempotent() {
+        assertEvaluate("current_time = current_time", true);
     }
 
     @Test
