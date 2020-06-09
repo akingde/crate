@@ -23,38 +23,76 @@
 package io.crate.metadata;
 
 import io.crate.metadata.settings.SessionSettings;
-import org.joda.time.DateTimeUtils;
 
-public interface TransactionContext {
+import java.time.Clock;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
-    static TransactionContext of(SessionSettings sessionSettings) {
-        return new StaticTransactionContext(sessionSettings);
+public class TransactionContext {
+
+    public static TransactionContext of(SessionSettings sessionSettings) {
+        return new TransactionContext(sessionSettings);
     }
 
-    long currentTimeMillis();
+    private static final AtomicReference<Supplier<Long>> MILLIS_PROVIDER = new AtomicReference<>(null);
 
-    SessionSettings sessionSettings();
+    public static long getCurrentTimeMillis() {
+        Supplier<Long> mp = MILLIS_PROVIDER.get();
+        return mp != null ?  mp.get() : micros() / 1000L;
+    }
 
-    class StaticTransactionContext implements TransactionContext {
+    public static void setCurrentMillisFixed(long millis) {
+        MILLIS_PROVIDER.set(() -> millis);
+    }
 
-        private final SessionSettings sessionSettings;
-        private Long currentTimeMillis;
+    public static void setCurrentMillisSystem() {
+        MILLIS_PROVIDER.set(null);
+    }
 
-        StaticTransactionContext(SessionSettings sessionSettings) {
-            this.sessionSettings = sessionSettings;
+    public static void setCurrentMillisProvider(Supplier<Long> provider) {
+        MILLIS_PROVIDER.set(provider);
+    }
+
+
+    private final SessionSettings sessionSettings;
+    private long currentTimeMicros = -1;
+
+    protected TransactionContext(SessionSettings sessionSettings) {
+        this.sessionSettings = sessionSettings;
+    }
+
+    /**
+     * @return current timestamp in ms.
+     * Subsequent calls will always return the same value. (Not thread-safe)
+     * Correlated with currentSystemUTCTime().
+     */
+    public long currentTimeMillis() {
+        return currentTimeMicros() / 1000L;
+    }
+
+    /**
+     * @return current time in the UTC time zone in microseconds.
+     * Subsequent calls will always return the same value. (Not thread-safe)
+     * Correlated with currentTimeMillis().
+     */
+    public long currentTimeMicros() {
+        if (MILLIS_PROVIDER.get() != null) {
+            return MILLIS_PROVIDER.get().get() * 1000L;
         }
-
-        @Override
-        public long currentTimeMillis() {
-            if (currentTimeMillis == null) {
-                currentTimeMillis = DateTimeUtils.currentTimeMillis();
-            }
-            return currentTimeMillis;
+        // no synchronization because StmtCtx is mostly used during single-threaded analysis phase
+        if (currentTimeMicros == -1) {
+            currentTimeMicros = micros();
         }
+        return currentTimeMicros;
+    }
 
-        @Override
-        public SessionSettings sessionSettings() {
-            return sessionSettings;
-        }
+    private static long micros() {
+        Instant i = Clock.systemUTC().instant();
+        return (i.getEpochSecond() * 1000_000_000L + i.getNano()) / 1000L;
+    }
+
+    public SessionSettings sessionSettings() {
+        return sessionSettings;
     }
 }

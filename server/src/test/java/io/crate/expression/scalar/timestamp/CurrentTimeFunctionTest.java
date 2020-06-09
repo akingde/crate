@@ -24,16 +24,12 @@ package io.crate.expression.scalar.timestamp;
 
 import io.crate.expression.scalar.AbstractScalarFunctionsTest;
 import io.crate.expression.symbol.Literal;
+import io.crate.metadata.TransactionContext;
 import io.crate.types.TimeTZ;
-import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
-import java.time.temporal.ChronoField;
-
-import static io.crate.expression.scalar.timestamp.TimezoneFunction.UTC;
 import static org.hamcrest.Matchers.instanceOf;
 
 public class CurrentTimeFunctionTest extends AbstractScalarFunctionsTest {
@@ -42,20 +38,30 @@ public class CurrentTimeFunctionTest extends AbstractScalarFunctionsTest {
 
     @Before
     public void prepare() {
-        DateTimeUtils.setCurrentMillisFixed(CURRENT_TIME_MILLIS);
+        TransactionContext.setCurrentMillisFixed(CURRENT_TIME_MILLIS);
     }
 
     @After
     public void cleanUp() {
-        DateTimeUtils.setCurrentMillisSystem();
+        TransactionContext.setCurrentMillisSystem();
     }
 
     @Test
-    public void timeIsCreatedCorrectly() {
-        long microsFromMidnight = Instant.ofEpochMilli(txnCtx.currentTimeMillis())
-                                      .atZone(UTC)
-                                      .getLong(ChronoField.NANO_OF_DAY) / 1000L;
-        assertEvaluate("current_time", new TimeTZ(microsFromMidnight, 0));
+    public void time_is_created_correctly() {
+        TimeTZ expected = new TimeTZ(txnCtx.currentTimeMicros(), 0);
+        assertEvaluate("current_time", expected);
+        assertEvaluate("current_time(6)", expected);
+    }
+
+    @Test
+    public void time_is_created_correctly_2() {
+        TimeTZ expected = new TimeTZ(txnCtx.currentTimeMicros(), 0);
+        assertEvaluate("current_time(3)", expected);
+    }
+
+    @Test
+    public void time_zero_precission() {
+        assertEvaluate("current_time(0)", new TimeTZ(txnCtx.currentTimeMicros(), 0));
     }
 
     @Test

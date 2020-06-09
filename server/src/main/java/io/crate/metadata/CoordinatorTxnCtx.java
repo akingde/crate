@@ -24,7 +24,6 @@ package io.crate.metadata;
 
 import io.crate.action.sql.SessionContext;
 import io.crate.metadata.settings.SessionSettings;
-import org.joda.time.DateTimeUtils;
 
 import java.util.Objects;
 
@@ -34,29 +33,17 @@ import java.util.Objects;
  * In Crate a transaction is always bound to the lifecycle of a single query/statement execution as there is no
  * transaction support.
  */
-public final class CoordinatorTxnCtx implements TransactionContext {
+public final class CoordinatorTxnCtx extends TransactionContext {
 
     private final SessionContext sessionContext;
-    private Long currentTimeMillis = null;
 
     public static CoordinatorTxnCtx systemTransactionContext() {
         return new CoordinatorTxnCtx(SessionContext.systemSessionContext());
     }
 
     public CoordinatorTxnCtx(SessionContext sessionContext) {
+        super(null); // created later by sessionSettings getter
         this.sessionContext = Objects.requireNonNull(sessionContext);
-    }
-
-    /**
-     * @return current timestamp in ms. Subsequent calls will always return the same value. (Not thread-safe)
-     */
-    @Override
-    public long currentTimeMillis() {
-        if (currentTimeMillis == null) {
-            // no synchronization because StmtCtx is mostly used during single-threaded analysis phase
-            currentTimeMillis = DateTimeUtils.currentTimeMillis();
-        }
-        return currentTimeMillis;
     }
 
     @Override

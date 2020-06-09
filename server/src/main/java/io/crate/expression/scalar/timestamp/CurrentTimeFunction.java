@@ -21,6 +21,7 @@
 
 package io.crate.expression.scalar.timestamp;
 
+import com.google.common.math.LongMath;
 import io.crate.data.Input;
 import io.crate.expression.scalar.ScalarFunctionModule;
 import io.crate.metadata.FunctionIdent;
@@ -32,13 +33,12 @@ import io.crate.types.DataTypes;
 import io.crate.types.TimeTZ;
 
 import javax.annotation.Nullable;
+import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import static io.crate.expression.scalar.timestamp.TimezoneFunction.UTC;
 
 public class CurrentTimeFunction extends Scalar<TimeTZ, Integer> {
 
@@ -75,11 +75,12 @@ public class CurrentTimeFunction extends Scalar<TimeTZ, Integer> {
             throw new IllegalArgumentException(String.format(
                 Locale.ENGLISH, "precision must range between [0..%d]", DEFAULT_PRECISION));
         }
-        // for now we do not mind precision, we just check it is within bounds
-        long microsFromMidnight = Instant.ofEpochMilli(txnCtx.currentTimeMillis())
-                                      .atZone(UTC)
-                                      .getLong(ChronoField.NANO_OF_DAY) / 1000L;
-        return new TimeTZ(microsFromMidnight, 0);
+        long currentTimeMicros = txnCtx.currentTimeMicros();
+        long dateDeltaMillis = Instant.ofEpochMilli(currentTimeMicros / 1000L).truncatedTo(ChronoUnit.DAYS).toEpochMilli();
+        long microsFromUTC = currentTimeMicros - (dateDeltaMillis * 1000L);
+        long f = (long) Math.pow(10, 6 - precision);
+        microsFromUTC = LongMath.divide(microsFromUTC, f, RoundingMode.DOWN) * f;
+        return new TimeTZ(microsFromUTC,0);
     }
 
     @Override
