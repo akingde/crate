@@ -41,7 +41,7 @@ import java.util.Locale;
 public class TimezoneFunction extends Scalar<Long, Object> {
 
     public static final String NAME = "timezone";
-    static final ZoneId UTC = ZoneId.of("UTC");
+    private static final ZoneId UTC = ZoneId.of("UTC");
 
     public static void register(ScalarFunctionModule module) {
         module.register(

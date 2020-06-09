@@ -141,7 +141,6 @@ public final class TimeTZParser {
                 ZoneOffset.ofTotalSeconds(time.getSecondsFromUTC()));
         }
         return localTime;
-
     }
 
     static IllegalArgumentException exceptionForInvalidLiteral(Object literal) {

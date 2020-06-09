@@ -80,7 +80,7 @@ public class CurrentTimeFunction extends Scalar<TimeTZ, Integer> {
         long microsFromUTC = currentTimeMicros - (dateDeltaMillis * 1000L);
         long f = (long) Math.pow(10, 6 - precision);
         microsFromUTC = LongMath.divide(microsFromUTC, f, RoundingMode.DOWN) * f;
-        return new TimeTZ(microsFromUTC,0);
+        return new TimeTZ(microsFromUTC, 0);
     }
 
     @Override
