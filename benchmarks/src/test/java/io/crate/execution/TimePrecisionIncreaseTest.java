@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 4)
 @Timeout(time=30000, timeUnit = TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2, time = 10000, timeUnit = TimeUnit.MILLISECONDS)
-public class TimeIncreasePrecisionTest {
+public class TimePrecisionIncreaseTest {
 
     static abstract class TCtxBase extends TransactionContext {
 
@@ -113,7 +113,7 @@ public class TimeIncreasePrecisionTest {
         // TimeIncreasePrecisionTest.currentTimeMillisOriginal  avgt    4  0.028 ± 0.001  us/op
         new Runner(
             new OptionsBuilder()
-                .include(TimeIncreasePrecisionTest.class.getSimpleName())
+                .include(TimePrecisionIncreaseTest.class.getSimpleName())
                 .build())
             .run();
     }
