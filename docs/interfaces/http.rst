@@ -230,47 +230,67 @@ Example of JSON representation of a column list of (String, Integer[])::
 
   "column_types": [ 4, [ 100, 9 ] ]
 
-IDs of all currently available data types:
+.. list-table:: IDs of all currently available data types:
+   :widths: 10 30 60
+   :header-rows: 1
 
-===== ===================
-ID    Data Type
-===== ===================
-0     Null
------ -------------------
-1     Not Supported
------ -------------------
-2     Char
------ -------------------
-3     Boolean
------ -------------------
-4     Text
------ -------------------
-5     Ip
------ -------------------
-6     Double Precision
------ -------------------
-7     Real
------ -------------------
-8     Smallint
------ -------------------
-9     Integer
------ -------------------
-10    Bigint
------ -------------------
-11    Timestamp
------ -------------------
-12    Object
------ -------------------
-13    GeoPoint (Double[])
------ -------------------
-14    GeoShape
------ -------------------
-15    Unchecked Object
------ -------------------
-19    Regproc
------ -------------------
-100   Array
-===== ===================
+   * - ID
+     - Data Type
+     - Format
+   * - 0
+     - Null
+     - null
+   * - 1
+     - Not Supported
+     -
+   * - 2
+     - Char
+     -
+   * - 3
+     - Boolean
+     -
+   * - 4
+     - Text
+     -
+   * - 5
+     - Ip
+     - string e.g. "192.169.0.55"
+   * - 6
+     - Double Precision
+     -
+   * - 7
+     - Real
+     -
+   * - 8
+     - Smallint
+     -
+   * - 9
+     - Integer
+     -
+   * - 10
+     - Bigint
+     -
+   * - 11
+     - Timestamp
+     -
+   * - 12
+     - Object
+     -
+   * - 13
+     - GeoPoint (Double[])
+     -
+   * - 14
+     - GeoShape
+     -
+   * - 15
+     - Unchecked Object
+     -
+   * - 19
+     - Time with time zone
+     - [micros from midnight, signed seconds from UTC]
+   * - 100
+     - Array
+     -
 
 .. _bulk_operations:
 
