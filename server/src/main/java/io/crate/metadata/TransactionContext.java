@@ -39,7 +39,7 @@ public class TransactionContext {
 
     public static long getCurrentTimeMillis() {
         Supplier<Long> mp = MILLIS_PROVIDER.get();
-        return mp != null ?  mp.get() : micros() / 1000L;
+        return mp != null ? mp.get() : micros() / 1000L;
     }
 
     public static void setCurrentMillisFixed(long millis) {
