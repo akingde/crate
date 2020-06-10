@@ -230,8 +230,10 @@ Example of JSON representation of a column list of (String, Integer[])::
 
   "column_types": [ 4, [ 100, 9 ] ]
 
-.. list-table:: IDs of all currently available data types:
-   :widths: 10 30 60
+IDs of all currently available data types:
+
+.. list-table::
+   :widths: 8 30 62
    :header-rows: 1
 
    * - ID
@@ -244,53 +246,53 @@ Example of JSON representation of a column list of (String, Integer[])::
      - Not Supported
      -
    * - 2
-     - Char
-     -
+     - :ref:`char <data-type-special>`
+     - single byte
    * - 3
-     - Boolean
-     -
+     - :ref:`boolean <data-type-boolean>`
+     - `true` or `false`
    * - 4
-     - Text
-     -
+     - :ref:`text <data-type-text>`
+     - all unicode characters allowed
    * - 5
-     - Ip
-     - string e.g. "192.169.0.55"
+     - :ref:`ip <ip-type>`
+     - '0:0:0:0:0:ffff:c0a8:64', '192.169.0.55'
    * - 6
-     - Double Precision
-     -
+     - :ref:`double precision <data-type-numeric>`
+     - 15 decimal digits precision
    * - 7
-     - Real
-     -
+     - real
+     - 6 decimal digits precision
    * - 8
-     - Smallint
-     -
+     - smallint
+     - range -32768 to 32767
    * - 9
-     - Integer
-     -
+     - integer
+     - range -2^31 to 2^31-1
    * - 10
-     - Bigint
-     -
+     - bigint
+     - range -2^63 to 2^63-1
    * - 11
-     - Timestamp
-     -
+     - :ref:`timestamp <timestamp_data_type>`
+     - ``bigint`` e.g. 1591808274761
    * - 12
-     - Object
-     -
+     - :ref:`object(dynamic|strict|ignored) <object_data_type>`
+     - '{"key": "value"}', { key = 'value'}
    * - 13
-     - GeoPoint (Double[])
-     -
+     - :ref:`geo_point <geo_point_data_type>`
+     - [lon_value::``double``, lat_value::``double``] e.g. [28.979999972507358,-57.33000000938773]
    * - 14
-     - GeoShape
-     -
+     - :ref:`geo_shape <geo_shape_data_type>`
+     - object[] e.g. [{"coordinates":[[[100.0,0.0],[101.0,0.0],[101.0,1.0]]],"type":"Polygon"}]
    * - 15
      - Unchecked Object
      -
    * - 19
-     - Time with time zone
-     - [micros from midnight, signed seconds from UTC]
+     - :ref:`time with time zone <time-data-type>`
+     - [``bigint``, ``integer``] e.g. [70652987666, 0]
    * - 100
-     - Array
-     -
+     - :ref:`array <data-type-array>`
+     - [``integer``, ``integer``] e.g. [100, 9] for a ``array(integer)``
 
 .. _bulk_operations:
 
