@@ -79,7 +79,7 @@ public class S3RepositoryPlugin extends Plugin implements RepositoryPlugin {
 
                 @Override
                 public TypeSettings settings() {
-                    return new TypeSettings(S3Repository.mandatorySettings(), S3Repository.optionalSettings());
+                    return new TypeSettings(List.of(), S3Repository.optionalSettings());
                 }
 
                 @Override

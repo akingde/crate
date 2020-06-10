@@ -26,6 +26,7 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
 import org.elasticsearch.cluster.metadata.RepositoryMetaData;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.test.ESTestCase;
@@ -107,6 +108,13 @@ public class AwsS3ServiceImplTests extends ESTestCase {
         assertThat(defaultCredentialsProvider, instanceOf(AWSStaticCredentialsProvider.class));
         assertThat(defaultCredentialsProvider.getCredentials().getAWSAccessKeyId(), is(awsAccessKey));
         assertThat(defaultCredentialsProvider.getCredentials().getAWSSecretKey(), is(awsSecretKey));
+    }
+
+    @Test
+    public void test_fallback_to_ec2_credentials_when_aws_credentials_are_not_provided() {
+        final S3ClientSettings clientSettings = S3ClientSettings.getClientSettings(Settings.builder().build());
+        final AWSCredentialsProvider defaultCredentialsProvider = S3Service.buildCredentials(logger, clientSettings);
+        assertThat(defaultCredentialsProvider, instanceOf(EC2ContainerCredentialsProviderWrapper.class));
     }
 
     @Test

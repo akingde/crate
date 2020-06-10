@@ -215,4 +215,5 @@ Performance improvements
 Fixes
 =====
 
-None
+- Re-enabled the IAM role authentication for
+  :ref:`s3 repositories <ref-create-repository-types-s3>`
