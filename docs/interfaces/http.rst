@@ -288,6 +288,9 @@ IDs of all currently available data types:
      - Unchecked Object
      -
    * - 19
+     - :ref:`regproc <oid_regproc>`
+     -
+   * - 20
      - :ref:`time with time zone <time-data-type>`
      - [``bigint``, ``integer``] e.g. [70652987666, 0]
    * - 100
