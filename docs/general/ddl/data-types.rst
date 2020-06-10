@@ -67,6 +67,8 @@ containers or collections:
 * `object`_
 * `array`_
 
+.. _data-type-boolean:
+
 ``boolean``
 ===========
 
@@ -1168,6 +1170,8 @@ brackets (``[]``), for example::
 
     [1, 2, 3]
     ['Zaphod', 'Ford', 'Arthur']
+
+.. _data-type-special:
 
 Special character types
 =======================
