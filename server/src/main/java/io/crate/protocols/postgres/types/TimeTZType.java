@@ -44,7 +44,6 @@ final class TimeTZType extends PGType<TimeTZ> {
 
     TimeTZType() {
         super(OID, TYPE_LEN, TYPE_MOD, OID_TYPE_NAME);
-
     }
 
     @Override

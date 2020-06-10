@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
 
+
 public class TimeTZTypeTest extends BasePGTypeTest<Long> {
 
     public TimeTZTypeTest() {

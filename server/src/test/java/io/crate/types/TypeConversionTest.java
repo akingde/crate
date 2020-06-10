@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.LongAdder;
 
 import static org.hamcrest.core.Is.is;
@@ -88,14 +87,11 @@ public class TypeConversionTest extends CrateUnitTest {
 
     @Test
     public void numberConversionTest() throws Exception {
-
         for (Byte byteVal : bytes(10)) {
             for (int id : DataTypes.ALLOWED_CONVERSIONS.get(DataTypes.BYTE.id())) {
                 var t = DataTypes.fromId(id);
-                if (t.equals(DataTypes.IP) || t.equals(DataTypes.TIMETZ)) {
+                if (t.equals(DataTypes.IP)) {
                     byteVal = (byte) Math.abs(byteVal == Byte.MIN_VALUE ? byteVal >> 1 : byteVal);
-                } else if (t.equals(DataTypes.TIMETZ)) {
-                    byteVal = (byte) ThreadLocalRandom.current().nextInt(25);
                 }
                 t.implicitCast(byteVal);
             }
