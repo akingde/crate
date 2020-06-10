@@ -32,7 +32,7 @@ import static io.crate.types.TimeTZParser.exceptionForInvalidLiteral;
 
 public final class TimeTZType extends DataType<TimeTZ> implements FixedWidthType, Streamer<TimeTZ> {
 
-    public static final int ID = 19;
+    public static final int ID = 20;
     public static final int TYPE_LEN = 12;
     public static final String NAME = "time with time zone";
     public static final TimeTZType INSTANCE = new TimeTZType();
