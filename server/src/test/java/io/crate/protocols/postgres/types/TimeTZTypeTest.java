@@ -64,10 +64,4 @@ public class TimeTZTypeTest extends BasePGTypeTest<Long> {
         assertThat(TimeTZType.INSTANCE.decodeUTF8Text("04:00:00.123456789+03:00".getBytes()),
                    is(new TimeTZ(14400123456L, 10800)));
     }
-
-    @Test
-    public void testDecodeUTF8TextWithUnexpectedNumberOfFractionDigits() {
-        expectedException.expect(IllegalArgumentException.class);
-        TimeTZType.INSTANCE.decodeUTF8Text("00:0000.0000000001".getBytes(StandardCharsets.UTF_8));
-    }
 }

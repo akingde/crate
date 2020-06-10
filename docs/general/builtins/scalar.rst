@@ -805,6 +805,23 @@ The following fields are supported:
 .. _`available time zones`: http://www.joda.org/joda-time/timezones.html
 .. _`Joda-Time`: http://www.joda.org/joda-time/
 
+.. _current_time:
+
+``CURRENT_TIME``
+----------------
+
+The ``CURRENT_TIME`` expression returns the time in microseconds
+since midnight UTC at the time the SQL statement was handled. Therefore,
+the same time value is returned for every invocation of a single statement.
+
+synopsis::
+
+    CURRENT_TIME [ ( precision ) ]
+
+``precision`` must be a positive integer between 0 and 6. The default value is
+6. It determines the number of fractional seconds to output. A value of 0 means
+the time will have second precision, no fractional seconds (microseconds)
+are given.
 
 .. _current_timestamp:
 
@@ -833,9 +850,9 @@ are given.
 
 .. NOTE::
 
-   The ``CURRENT_TIMESTAMP`` will be evaluated  using javas
-   ``System.currentTimeMillis()``. So its actual result depends on the
-   underlying operating system.
+   The ``CURRENT_TIMESTAMP`` and ``CURRENT_TIME`` expressions will be evaluated
+   using JMV's ``Clock.systemUTC().instant()``. So its actual result depends on
+   the underlying operating system, hardware and the JVM implementation.
 
 .. _now:
 
