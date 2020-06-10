@@ -57,6 +57,7 @@ None
 Fixes
 =====
 
+<<<<<<< HEAD
 - Fixed an issue that prevented CrateDB from detecting changes to the SSL
   ``keystore`` or ``truststore`` if one the paths is a symlink.
 
@@ -68,3 +69,10 @@ Fixes
 
 - Fixed a performance issue that can lead to queries like ``SELECT text_column
   FROM tbl GROUP BY 1`` to run more than 150% faster.
+=======
+- Fixed an issue that caused the ``OFFSET`` clause to be ignored in ``SELECT
+  DISTINCT`` queries.
+
+- Fixed arithmetics containing a non-floating numeric column type and a
+  floatling literal which resulted wrongly in a non-floating return type.
+>>>>>>> c193f5511f... Apply offset on optimized SELECT DISTINCT queries
