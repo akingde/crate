@@ -161,7 +161,6 @@ table available in CrateDB::
     cr> SELECT oid, typname, typarray, typelem, typlen, typtype, typcategory
     ... FROM pg_catalog.pg_type
     ... ORDER BY oid;
-
     +------+------------------------------+----------+---------+--------+---------+-------------+
     |  oid | typname                      | typarray | typelem | typlen | typtype | typcategory |
     +------+------------------------------+----------+---------+--------+---------+-------------+
@@ -201,7 +200,7 @@ table available in CrateDB::
     | 2277 | anyarray                     |        0 |    2276 |     -1 | p       | P           |
     | 2287 | _record                      |        0 |    2249 |     -1 | p       | A           |
     +------+------------------------------+----------+---------+--------+---------+-------------+
-    SELECT 33 rows in set (... sec)
+    SELECT 35 rows in set (... sec)
 
 .. NOTE::
 
