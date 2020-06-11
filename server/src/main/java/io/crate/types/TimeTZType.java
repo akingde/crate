@@ -86,13 +86,7 @@ public final class TimeTZType extends DataType<TimeTZ> implements FixedWidthType
     }
 
     @Override
-    public TimeTZ value(Object value) {
-        if (value == null) {
-            return null;
-        }
-        if (value instanceof TimeTZ) {
-            return (TimeTZ) value;
-        }
+    public TimeTZ implicitCast(Object value) {
         if (value instanceof String) {
             try {
                 return TimeTZParser.parse((String) value);
@@ -107,5 +101,13 @@ public final class TimeTZType extends DataType<TimeTZ> implements FixedWidthType
             }
         }
         throw exceptionForInvalidLiteral(value);
+    }
+
+    @Override
+    public TimeTZ value(Object value) {
+        if (value == null) {
+            return null;
+        }
+        return value instanceof TimeTZ ? (TimeTZ) value : implicitCast(value);
     }
 }
