@@ -26,6 +26,7 @@ import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import static io.crate.types.TimeTZParser.timeTZOf;
 import static io.crate.types.TimeTZParser.exceptionForInvalidLiteral;
@@ -87,6 +88,9 @@ public final class TimeTZType extends DataType<TimeTZ> implements FixedWidthType
 
     @Override
     public TimeTZ implicitCast(Object value) {
+        if (value == null) {
+            return null;
+        }
         if (value instanceof String) {
             try {
                 return TimeTZParser.parse((String) value);
@@ -108,6 +112,14 @@ public final class TimeTZType extends DataType<TimeTZ> implements FixedWidthType
         if (value == null) {
             return null;
         }
-        return value instanceof TimeTZ ? (TimeTZ) value : implicitCast(value);
+        return (TimeTZ) value;
+    }
+
+    @Override
+    public TimeTZ valueForInsert(Object value) {
+        throw new UnsupportedOperationException(String.format(
+            Locale.ENGLISH,
+            "%s cannot be used in insert statements",
+            TimeTZType.class.getSimpleName()));
     }
 }
