@@ -259,7 +259,14 @@ class S3BlobContainer extends AbstractBlobContainer {
         try (AmazonS3Reference clientReference = blobStore.clientReference()) {
             clientReference.client().putObject(putRequest);
         } catch (final AmazonClientException e) {
-            throw new IOException("Unable to upload object [" + blobName + "] using a single upload", e);
+            if (!this.blobStore.getRepositoryMetaData().settings().hasValue(S3RepositorySettings.ACCESS_KEY_SETTING.getKey()) &&
+                !this.blobStore.getRepositoryMetaData().settings().hasValue(S3RepositorySettings.SECRET_KEY_SETTING.getKey())
+            ) {
+                throw new BlobStoreException("Cannot find required credentials to create a repository of type s3. " +
+                                                          "Credentials must be provided either as repository options access_key and secret_key or AWS IAM roles.");
+            } else {
+                throw new IOException("Unable to upload object [" + blobName + "] using a single upload", e);
+            }
         }
     }
 

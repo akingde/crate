@@ -83,6 +83,10 @@ class S3BlobStore implements BlobStore {
         return bufferSize.getBytes();
     }
 
+    RepositoryMetaData getRepositoryMetaData() {
+        return metadata;
+    }
+
     @Override
     public BlobContainer blobContainer(BlobPath path) {
         return new S3BlobContainer(path, this);
