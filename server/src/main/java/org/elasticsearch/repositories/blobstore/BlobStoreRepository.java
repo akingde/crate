@@ -53,6 +53,7 @@ import org.elasticsearch.common.blobstore.BlobContainer;
 import org.elasticsearch.common.blobstore.BlobMetaData;
 import org.elasticsearch.common.blobstore.BlobPath;
 import org.elasticsearch.common.blobstore.BlobStore;
+import org.elasticsearch.common.blobstore.BlobStoreException;
 import org.elasticsearch.common.blobstore.fs.FsBlobContainer;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
@@ -666,6 +667,8 @@ public abstract class BlobStoreRepository extends AbstractLifecycleComponent imp
                 }
                 return seed;
             }
+        } catch (BlobStoreException exp) {
+            throw new RepositoryVerificationException(metadata.name(), exp.getMessage());
         } catch (IOException exp) {
             throw new RepositoryVerificationException(metadata.name(), "path " + basePath() + " is not accessible on master node", exp);
         }

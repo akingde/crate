@@ -61,6 +61,8 @@ import java.util.stream.Collectors;
 import static org.elasticsearch.repositories.s3.S3RepositorySettings.MAX_FILE_SIZE;
 import static org.elasticsearch.repositories.s3.S3RepositorySettings.MAX_FILE_SIZE_USING_MULTIPART;
 import static org.elasticsearch.repositories.s3.S3RepositorySettings.MIN_PART_SIZE_USING_MULTIPART;
+import static org.elasticsearch.repositories.s3.S3RepositorySettings.ACCESS_KEY_SETTING;
+import static org.elasticsearch.repositories.s3.S3RepositorySettings.SECRET_KEY_SETTING;
 
 class S3BlobContainer extends AbstractBlobContainer {
 
@@ -108,10 +110,21 @@ class S3BlobContainer extends AbstractBlobContainer {
      */
     @Override
     public void writeBlob(String blobName, InputStream inputStream, long blobSize, boolean failIfAlreadyExists) throws IOException {
-        if (blobSize <= blobStore.bufferSizeInBytes()) {
-            executeSingleUpload(blobStore, buildKey(blobName), inputStream, blobSize);
-        } else {
-            executeMultipartUpload(blobStore, buildKey(blobName), inputStream, blobSize);
+        try {
+            if (blobSize <= blobStore.bufferSizeInBytes()) {
+                executeSingleUpload(blobStore, buildKey(blobName), inputStream, blobSize);
+            } else {
+                executeMultipartUpload(blobStore, buildKey(blobName), inputStream, blobSize);
+            }
+        } catch (AmazonClientException e) {
+            if (!this.blobStore.getRepositoryMetaData().settings().hasValue(ACCESS_KEY_SETTING.getKey()) &&
+                !this.blobStore.getRepositoryMetaData().settings().hasValue(SECRET_KEY_SETTING.getKey())
+            ) {
+                throw new BlobStoreException("Cannot find required credentials to create a repository of type s3. " +
+                                                 "Credentials must be provided either as repository options access_key and secret_key or AWS IAM roles.");
+            } else {
+                throw new IOException("Unable to upload object [" + blobName + "] using a single upload", e);
+            }
         }
     }
 
@@ -237,7 +250,7 @@ class S3BlobContainer extends AbstractBlobContainer {
     void executeSingleUpload(final S3BlobStore blobStore,
                              final String blobName,
                              final InputStream input,
-                             final long blobSize) throws IOException {
+                             final long blobSize) {
 
         // Extra safety checks
         if (blobSize > MAX_FILE_SIZE.getBytes()) {
@@ -258,15 +271,6 @@ class S3BlobContainer extends AbstractBlobContainer {
 
         try (AmazonS3Reference clientReference = blobStore.clientReference()) {
             clientReference.client().putObject(putRequest);
-        } catch (final AmazonClientException e) {
-            if (!this.blobStore.getRepositoryMetaData().settings().hasValue(S3RepositorySettings.ACCESS_KEY_SETTING.getKey()) &&
-                !this.blobStore.getRepositoryMetaData().settings().hasValue(S3RepositorySettings.SECRET_KEY_SETTING.getKey())
-            ) {
-                throw new BlobStoreException("Cannot find required credentials to create a repository of type s3. " +
-                                                          "Credentials must be provided either as repository options access_key and secret_key or AWS IAM roles.");
-            } else {
-                throw new IOException("Unable to upload object [" + blobName + "] using a single upload", e);
-            }
         }
     }
 
@@ -396,9 +400,6 @@ class S3BlobContainer extends AbstractBlobContainer {
                     parts);
             clientReference.client().completeMultipartUpload(complRequest);
             success = true;
-
-        } catch (final AmazonClientException e) {
-            throw new IOException("Unable to upload object [" + blobName + "] using multipart upload", e);
         } finally {
             if ((success == false) && Strings.hasLength(uploadId.get())) {
                 final AbortMultipartUploadRequest abortRequest = new AbortMultipartUploadRequest(bucketName, blobName, uploadId.get());
