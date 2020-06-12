@@ -24,6 +24,7 @@ package io.crate.statistics;
 
 import io.crate.Streamer;
 import io.crate.action.FutureActionListener;
+import io.crate.common.annotations.VisibleForTesting;
 import io.crate.concurrent.CompletableFutures;
 import io.crate.data.Row;
 import io.crate.execution.ddl.AnalyzeRequest;
@@ -39,8 +40,6 @@ import io.crate.metadata.table.SchemaInfo;
 import io.crate.metadata.table.TableInfo;
 import io.crate.types.DataType;
 import io.crate.types.DataTypes;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.elasticsearch.Version;
 import org.elasticsearch.action.ActionListenerResponseHandler;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
@@ -65,7 +64,6 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 @Singleton
 public final class TransportAnalyzeAction {
 
-    private static final Logger LOGGER = LogManager.getLogger(TransportAnalyzeAction.class);
     private static final String INVOKE_ANALYZE = "internal:crate:sql/analyze/invoke";
     private static final String FETCH_SAMPLES = "internal:crate:sql/analyze/fetch_samples";
     private static final String RECEIVE_TABLE_STATS = "internal:crate:sql/analyze/receive_stats";
@@ -103,7 +101,7 @@ public final class TransportAnalyzeAction {
             AnalyzeRequest::new,
             ThreadPool.Names.SAME, // goes async right away
             // Explicit generic is required for eclipse JDT, otherwise it won't compile
-            new NodeActionRequestHandler<AnalyzeRequest, AcknowledgedResponse>(
+            new NodeActionRequestHandler<>(
                 req -> fetchSamplesThenGenerateAndPublishStats()
             )
         );
@@ -112,7 +110,7 @@ public final class TransportAnalyzeAction {
             FetchSampleRequest::new,
             ThreadPool.Names.SEARCH,
             // Explicit generic is required for eclipse JDT, otherwise it won't compile
-            new NodeActionRequestHandler<FetchSampleRequest, FetchSampleResponse>(
+            new NodeActionRequestHandler<>(
                 req -> completedFuture(new FetchSampleResponse(
                     reservoirSampler.getSamples(req.relation(), req.columns(), req.maxSamples())))
             )
@@ -122,7 +120,7 @@ public final class TransportAnalyzeAction {
             PublishTableStatsRequest::new,
             ThreadPool.Names.SAME, // cheap operation
             // Explicit generic is required for eclipse JDT, otherwise it won't compile
-            new NodeActionRequestHandler<PublishTableStatsRequest, AcknowledgedResponse>(
+            new NodeActionRequestHandler<>(
                 req -> {
                     tableStats.updateTableStats(req.tableStats());
                     return completedFuture(new AcknowledgedResponse(true));
@@ -180,7 +178,8 @@ public final class TransportAnalyzeAction {
         return listener;
     }
 
-    private static Stats createTableStats(Samples samples, List<Reference> primitiveColumns) {
+    @VisibleForTesting
+    static Stats createTableStats(Samples samples, List<Reference> primitiveColumns) {
         List<Row> records = samples.records;
         List<Object> columnValues = new ArrayList<>(records.size());
         Map<ColumnIdent, ColumnStats> statsByColumn = new HashMap<>(primitiveColumns.size());
